@@ -1,0 +1,189 @@
+ target C {
+    platform: {
+      name: "rp2040",
+      board: "pololu_3pi_2040_robot" //wrong
+    },
+    single-threaded: true
+  }
+  
+  reactor Robot {
+    timer t(0s, 10 ms)
+    input accel_x: float
+    input accel_y: float
+    input accel_z: float
+    input mode: int
+    output notify: string  // Notify of mode change.
+    fans = new Fans();
+    state fan1_speed: float
+    state fan2_speed: float
+    state fan1_ang: float
+    state fan2_ang: float
+    //connect these fan1_speed var etc to input ports of Fans
+
+    reaction(startup) -> notify {=
+      lf_set(notify, "INIT");
+    =}
+    
+    initial mode DRIVING {
+        /*Each mode will work like
+            -Check if we're in right mode if not transition
+            -Check our accel values and run some type of alg depending on mode to get desired fan speed and ang
+            -input these values into Fans reactor
+            -Each mode should continuosly be running this
+        */
+    }
+
+
+    mode TURNING {
+
+    }
+
+    mode BACKING {
+
+    }
+
+    mode CLIMBING {
+
+    }
+  }
+    
+  reactor Accelerometer {
+    timer t(0, 10ms)
+    output x: int
+    output y: int
+    output z: int
+
+       
+    reaction(startup) {=
+        gpio_init(ACCEL_X_IN_LED_PIN); //set all our pins for our accelerometer
+        gpio_set_dir(ACCEL_X_LED_IN_PIN, GPIO_IN); 
+
+        gpio_init(ACCEL_Y_IN_LED_PIN);
+        gpio_set_dir(ACCEL_Y_LED_IN_PIN, GPIO_IN); 
+
+        gpio_init(ACCEL_Z_IN_LED_PIN);
+        gpio_set_dir(ACCEL_Z_LED_IN_PIN, GPIO_IN); 
+        
+
+    =}
+      
+      
+      reaction(t) -> x, y, z {=
+        
+        //read data from I2C and set output var
+        
+      =}
+  }
+
+reactor UltraSonicSensor {
+    timer t(0, 10ms)
+    output data: int
+    reaction(startup) {=
+        gpio_init(USONIC_IN_LED_PIN); 
+        gpio_set_dir(USONIC_IN_LED_PIN, GPIO_IN); 
+    =}
+      
+      
+      reaction(t) -> x, y, z {=
+        
+        //read data from I2C and set output var
+        
+      =}
+      
+  }
+
+  reactor Fans {
+    timer t(0, 10ms)
+    output data: int
+    input speed1: float
+    input speed2: float
+    input angle1: float
+    input angle2: float
+
+
+    
+    //need some logic to know where our fan is currently angled.
+    reaction(startup) {=
+        gpio_init(FAN1_IN_LED_PIN); 
+        gpio_set_dir(FAN1_IN_LED_PIN, GPIO_IN); 
+
+        gpio_init(FAN2_IN_LED_PIN); //set  our pins for our accelerometer
+        gpio_set_dir(FAN2_IN_LED_PIN, GPIO_IN); 
+
+        gpio_init(FAN1_ANG_IN_LED_PIN); 
+        gpio_set_dir(FAN1_ANG_IN_LED_PIN, GPIO_IN); 
+
+        gpio_init(FAN2_ANG_IN_LED_PIN); //set  our pins for our accelerometer
+        gpio_set_dir(FAN2_ANG_IN_LED_PIN, GPIO_IN); 
+
+    =}
+      
+      
+      reaction(speed1, angle1) {=
+        
+        //logic here to set the pins
+        
+      =}
+
+        reaction(speed2, angle2) {=
+        
+    //logic here to set the pins
+    
+    =}
+  }
+
+  reactor Steering_Wheel {
+    timer t(0, 10ms)
+    output data: int
+    reaction(startup) {=
+        gpio_init(WHEEL_OUT_LED_PIN); 
+        gpio_set_dir(WHEELL_OUT_LED_PIN, GPIO_OUT); 
+    =}
+      
+      
+      reaction(t) -> x, y, z {=
+         
+        //read data from I2C and set output var
+            
+    =}
+          
+    }
+  /* The main reactor handles the feedback from the accelerometer and distance sensor.
+  * It tells the robot which mode to be in and sends proper boolean values for correct behavior with those modes.
+  *  
+  *
+  */
+  main reactor {
+    timer t(0, 10 ms)
+    state drive: bool = true
+    state robot_state : int;
+    state dist: float = 0;
+    robot = new Robot()
+    accel = new Accelerometer()
+    //connect accelerometer output ports to input ports for robot
+    dist = new UltraSonicSensor()
+    reaction(startup) {=
+        //make sure we are receiving sensor inputs
+        //determine if we're up against the wall or on the floor 
+        //make sure we're getting input from fans
+    =}
+
+    reaction(t, accel.x, accel.y, accel.z, dist.data) -> something {
+        /*some logic with accelerometer inputs and ultrasonic sensor inputs */
+        robot_mode = //
+        if (start) {
+            if (/*condition to be in mode 1*/) {
+                lf_set(robot_mode, /*mode*/)
+            } else if (/*condition to be in mode 2*/) {
+                lf_set(robot_mode, /*mode*/) 
+            } else if (/*condition to be in mode 3*/) {
+                lf_set(robot_mode, /*mode*/) 
+            }
+
+
+
+
+        }
+    }
+  }
+  
