@@ -1,0 +1,19 @@
+target C {
+    single-threaded: true
+}
+
+preamble {=
+    #include <calib-files/servo.h>
+=}
+
+reactor Servo {
+    input angle: int
+
+    reaction(startup) {=
+        servo_init();
+    =}
+
+    method set_angle(angle) {=
+        servo_set_angle(angle);
+    =}
+}
