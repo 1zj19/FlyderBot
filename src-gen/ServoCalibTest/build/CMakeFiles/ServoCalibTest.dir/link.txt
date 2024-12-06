@@ -1,1 +1,0 @@
-/usr/bin/cc -O3 -DNDEBUG CMakeFiles/ServoCalibTest.dir/lib/schedule.c.o CMakeFiles/ServoCalibTest.dir/_servocalibtest_main.c.o CMakeFiles/ServoCalibTest.dir/_servo.c.o CMakeFiles/ServoCalibTest.dir/ServoCalibTest.c.o -o ServoCalibTest  -lm core/libcore.a 
