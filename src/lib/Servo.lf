@@ -1,5 +1,7 @@
 target C {
-    single-threaded: true
+    single-threaded: true,
+    files: ["../../robot-lib/"],
+    cmake-include: ["../../robot-lib/robot-lib.txt"]
 }
 
 preamble {=
