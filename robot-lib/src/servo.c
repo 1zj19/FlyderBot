@@ -13,7 +13,7 @@ void servo_init() {
     gpio_init(SERVO_PIN);
     gpio_set_dir(SERVO_PIN);
 
-    // gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM) //from youtube DrJonea.co.uk servos rasberry pi pico
+    gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM) //from youtube DrJonea.co.uk servos rasberry pi pico
 
     // configure PWM slice and get slice num that controls speed
     uint32_t slice = pwm_gpio_to_slice_num();

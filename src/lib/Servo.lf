@@ -3,7 +3,7 @@ target C {
 }
 
 preamble {=
-    #include <calib-files/servo.h>
+    #include <servo.h>
 =}
 
 reactor Servo {

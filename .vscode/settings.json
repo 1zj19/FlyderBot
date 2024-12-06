@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "pwm.h": "c",
-        "pico.h": "c"
+        "pico.h": "c",
+        "stdbool.h": "c",
+        "stdlib.h": "c"
     }
 }
